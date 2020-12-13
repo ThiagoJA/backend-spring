@@ -4,32 +4,35 @@ import java.io.Serializable;
 
 import com.iftm.backendachadosperdidos.entities.User;
 
-public class UserDTO implements Serializable {
+public class UserInsertDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
 	private String name;
 	private String email;
 	private String telefone;
+	private String senha;
 	private String cpf;
 
-	public UserDTO() {
+	public UserInsertDTO() {
 	}
 
-	public UserDTO(Long id, String name, String email, String telefone, String cpf) {
+	public UserInsertDTO(Long id, String name, String email, String telefone, String senha, String cpf) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.email = email;
 		this.telefone = telefone;
+		this.senha = senha;
 		this.cpf = cpf;
 	}
 
-	public UserDTO(User entity) {
+	public UserInsertDTO(User entity) {
 		this.id = entity.getId();
 		this.name = entity.getName();
 		this.email = entity.getEmail();
 		this.telefone = entity.getTelefone();
+		this.senha = entity.getSenha();
 		this.cpf = entity.getCpf();
 	}
 
@@ -65,15 +68,15 @@ public class UserDTO implements Serializable {
 		this.telefone = telefone;
 	}
 
-	public String getCpf() {
-		return cpf;
+	public String getSenha() {
+		return senha;
 	}
 
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 
 	public User toEntity() {
-		return new User(id, name, email, telefone, null, cpf);
+		return new User(id, name, email, telefone, senha, cpf);
 	}
 }

@@ -8,6 +8,8 @@ import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.iftm.backendachadosperdidos.dto.CategoryDTO;
@@ -17,6 +19,7 @@ import com.iftm.backendachadosperdidos.entities.Category;
 import com.iftm.backendachadosperdidos.entities.Product;
 import com.iftm.backendachadosperdidos.repositories.CategoryRepository;
 import com.iftm.backendachadosperdidos.repositories.ProductRepository;
+import com.iftm.backendachadosperdidos.resources.exeptions.DatabaseException;
 import com.iftm.backendachadosperdidos.resources.exeptions.ResourceNotFoundException;
 
 @Service
@@ -55,6 +58,16 @@ public class ProductService {
 			return new ProductDTO(entity);
 		} catch(EntityNotFoundException e) {
 			throw new ResourceNotFoundException(id);
+		}
+	}
+	
+	public void delete(Long id) {
+		try {
+			repository.deleteById(id);
+		} catch(EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundException(id);
+		} catch(DataIntegrityViolationException e) {
+			throw new DatabaseException(e.getMessage()); 
 		}
 	}
 

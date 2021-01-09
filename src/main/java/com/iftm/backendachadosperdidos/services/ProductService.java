@@ -2,15 +2,16 @@ package com.iftm.backendachadosperdidos.services;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
-import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.iftm.backendachadosperdidos.dto.CategoryDTO;
 import com.iftm.backendachadosperdidos.dto.ProductCategoriesDTO;
@@ -30,9 +31,10 @@ public class ProductService {
 	
 	@Autowired
 	private CategoryRepository categoryRepository;
-	public List<ProductDTO> findAll() {
-		List<Product> list =  repository.findAll();
-		return list.stream().map(e -> new ProductDTO(e)).collect(Collectors.toList());
+	
+	public Page<ProductDTO> findAllPaged(Pageable pageable) {
+		Page<Product> list =  repository.findAll(pageable);
+		return list.map(e -> new ProductDTO(e));
 	}
 	
 	public ProductDTO findById(Long id) {
@@ -80,7 +82,7 @@ public class ProductService {
 			setProductCategories(entity, dto.getCategories());
 		}
 	}
-
+	
 	private void setProductCategories(Product entity, List<CategoryDTO> categories) {
 		entity.getCategories().clear();
 		for (CategoryDTO dto : categories) {
@@ -88,5 +90,5 @@ public class ProductService {
 			entity.getCategories().add(category);
 		}
 	}
-	
+
 }
